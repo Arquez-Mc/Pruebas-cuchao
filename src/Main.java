@@ -51,5 +51,51 @@ public class Main {
         gestor.eliminarTareaMap(2);
 
         gestor.mostrarTareasMap();
+
+        //*********************************************************************
+        // HILOS
+
+        System.out.println("AQUI VAN LOS HILOS" + " \n ");
+
+        Thread hilo1 = new Thread(
+                () -> {
+            try {
+                System.out.println("\n[Hilo1] Esperando 5 segundos...");
+                Thread.sleep(5000); // pausa 5 segundos
+                gestor.agregarTareaLista("Tarea agregada por hilo1");
+                System.out.println("[Hilo1] Agregó una tarea a la lista.");
+            }
+            catch (InterruptedException e) {
+                System.out.println("[Hilo1] Fue interrumpido.");}
+        }
+        );
+
+        Thread hilo2 = new Thread(() -> {
+            try {
+                System.out.println("\n[Hilo2] Esperando 3 segundos...");
+                Thread.sleep(3000); // pausa 3 segundos
+                gestor.agregarTareaSet("Tarea única agregada por hilo2");
+                System.out.println("[Hilo2] Agregó una tarea al set.");
+            } catch (InterruptedException e) {
+                System.out.println("[Hilo2] Fue interrumpido.");
+            }
+        });
+
+        // Iniciamos ambos hilos
+        hilo1.start();
+        hilo2.start();
+
+        // Esperamos a que terminen antes de mostrar resultados
+        try {
+            hilo1.join();
+            hilo2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Mostramos las tareas después de que ambos hilos trabajaron
+        System.out.println("\n--- Resultados después de los hilos ---");
+        gestor.mostrarTareasLista();
+        gestor.mostrarTareasSet();
     }
 }
